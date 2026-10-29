@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { searchTracks } from './api';
 import { Player } from '../player/Player';
+import './SearchBar.css';
 
 export function SearchBar() {
   const [input, setInput] = useState('');
@@ -22,8 +23,9 @@ export function SearchBar() {
   const hasNext = currentIndex !== null && currentIndex < tracks.length - 1;
 
   return (
-    <div>
+    <div className="search">
       <form
+        className="search__form"
         onSubmit={(e) => {
           e.preventDefault();
           setQuery(input.trim());
@@ -31,26 +33,37 @@ export function SearchBar() {
         }}
       >
         <input
+          className="search__input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Поиск музыки"
         />
-        <button type="submit">Найти</button>
+        <button className="search__button" type="submit">
+          Найти
+        </button>
       </form>
 
-      {isLoading && <p>Загрузка...</p>}
-      {error && <p>{error.message}</p>}
+      {isLoading && <p className="search__status">Загрузка...</p>}
+      {error && <p className="search__status">{error.message}</p>}
 
-      <ul style={{ paddingBottom: 160 }}>
+      <ul className="track-list">
         {tracks.map((track, index) => (
-          <li key={track.id}>
-            <img src={track.thumbnail} alt="" width={64} />
-            <span>{track.title}</span>
-            <span>
+          <li
+            key={track.id}
+            className={`track ${index === currentIndex ? 'track--active' : ''}`}
+          >
+            <img className="track__cover" src={track.thumbnail} alt="" />
+            <span className="track__info">{track.title}</span>
+            <span className="track__duration">
               {Math.floor(track.duration / 60)}:
               {String(track.duration % 60).padStart(2, '0')}
             </span>
-            <button onClick={() => setCurrentIndex(index)}>▶</button>
+            <button
+              className="track__play"
+              onClick={() => setCurrentIndex(index)}
+            >
+              ▶
+            </button>
           </li>
         ))}
       </ul>
