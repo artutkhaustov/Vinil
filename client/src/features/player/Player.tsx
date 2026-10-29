@@ -4,6 +4,8 @@ import './Player.css';
 
 type Props = {
   videoId: string | null;
+  title: string;
+  thumbnail: string;
   hasPrev: boolean;
   hasNext: boolean;
   onPrev: () => void;
@@ -60,7 +62,15 @@ const Icon = {
   ),
 };
 
-export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
+export function Player({
+  videoId,
+  title,
+  thumbnail,
+  hasPrev,
+  hasNext,
+  onPrev,
+  onNext,
+}: Props) {
   const playerRef = useRef<any>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -134,22 +144,40 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
         }}
       />
 
-      <div className="player__controls">
-        <button className="player__icon" onClick={onPrev} disabled={!hasPrev} aria-label="Предыдущий">
-          <Icon.Prev />
-        </button>
-        <button className="player__icon" onClick={() => seekBy(-10)} aria-label="Назад 10 сек">
-          <Icon.Rewind />
-        </button>
-        <button className="player__play" onClick={togglePlay} aria-label="Играть или пауза">
-          {playing ? <Icon.Pause /> : <Icon.Play />}
-        </button>
-        <button className="player__icon" onClick={() => seekBy(10)} aria-label="Вперёд 10 сек">
-          <Icon.Forward />
-        </button>
-        <button className="player__icon" onClick={onNext} disabled={!hasNext} aria-label="Следующий">
-          <Icon.Next />
-        </button>
+      <div className="player__top">
+        <div className="player__track">
+          {thumbnail && <img className="player__cover" src={thumbnail} alt="" />}
+          <span className="player__title">{title}</span>
+        </div>
+
+        <div className="player__controls">
+          <button className="player__icon" onClick={onPrev} disabled={!hasPrev} aria-label="Предыдущий">
+            <Icon.Prev />
+          </button>
+          <button className="player__icon" onClick={() => seekBy(-10)} aria-label="Назад 10 сек">
+            <Icon.Rewind />
+          </button>
+          <button className="player__play" onClick={togglePlay} aria-label="Играть или пауза">
+            {playing ? <Icon.Pause /> : <Icon.Play />}
+          </button>
+          <button className="player__icon" onClick={() => seekBy(10)} aria-label="Вперёд 10 сек">
+            <Icon.Forward />
+          </button>
+          <button className="player__icon" onClick={onNext} disabled={!hasNext} aria-label="Следующий">
+            <Icon.Next />
+          </button>
+        </div>
+
+        <div className="player__volume">
+          <Icon.Volume />
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={volume}
+            onChange={(e) => setVolume(Number(e.target.value))}
+          />
+        </div>
       </div>
 
       <div className="player__progress">
@@ -163,17 +191,6 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
           onChange={(e) => handleSeek(Number(e.target.value))}
         />
         <span>{formatTime(duration)}</span>
-      </div>
-
-      <div className="player__volume">
-        <Icon.Volume />
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-        />
       </div>
     </div>
   );
