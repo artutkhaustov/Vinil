@@ -70,6 +70,8 @@ export function SearchBar() {
 
       <Player
         videoId={currentTrack?.id ?? null}
+        title={currentTrack?.title ?? ''}
+        thumbnail={currentTrack?.thumbnail ?? ''}
         hasPrev={hasPrev}
         hasNext={hasNext}
         onPrev={() =>
