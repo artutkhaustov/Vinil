@@ -16,11 +16,56 @@ function formatTime(sec: number) {
   return `${m}:${String(s % 60).padStart(2, '0')}`;
 }
 
+const Icon = {
+  Prev: () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="4" y="5" width="2.5" height="14" />
+      <path d="M20 5v14L9 12z" />
+    </svg>
+  ),
+  Next: () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="17.5" y="5" width="2.5" height="14" />
+      <path d="M4 5v14l11-7z" />
+    </svg>
+  ),
+  Rewind: () => (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M11 6v12l-8-6z" />
+      <path d="M20 6v12l-8-6z" />
+    </svg>
+  ),
+  Forward: () => (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M4 6v12l8-6z" />
+      <path d="M13 6v12l8-6z" />
+    </svg>
+  ),
+  Play: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  ),
+  Pause: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="6" y="5" width="4" height="14" />
+      <rect x="14" y="5" width="4" height="14" />
+    </svg>
+  ),
+  Volume: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor" />
+      <path d="M16 8.5a5 5 0 0 1 0 7" />
+    </svg>
+  ),
+};
+
 export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
   const playerRef = useRef<any>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(50);
 
   useEffect(() => {
     if (!playing) return;
@@ -37,6 +82,10 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
     setCurrent(0);
     setDuration(0);
   }, [videoId]);
+
+  useEffect(() => {
+    playerRef.current?.setVolume(volume);
+  }, [volume]);
 
   if (!videoId) return null;
 
@@ -74,6 +123,7 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
         opts={opts}
         onReady={(e) => {
           playerRef.current = e.target;
+          e.target.setVolume(volume);
           setDuration(e.target.getDuration());
         }}
         onPlay={() => setPlaying(true)}
@@ -84,31 +134,22 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
         }}
       />
 
-      <div className="player__row">
-        <button className="player__side" disabled aria-hidden>
-          ☰
+      <div className="player__controls">
+        <button className="player__icon" onClick={onPrev} disabled={!hasPrev} aria-label="Предыдущий">
+          <Icon.Prev />
         </button>
-
-        <div className="player__controls">
-          <button className="player__icon" onClick={() => seekBy(-10)}>
-            ⏪
-          </button>
-          <button className="player__play" onClick={togglePlay}>
-            {playing ? '❚❚' : '▶'}
-          </button>
-          <button className="player__icon" onClick={() => seekBy(10)}>
-            ⏩
-          </button>
-        </div>
-
-        <div className="player__side-buttons">
-          <button className="player__side" onClick={onPrev} disabled={!hasPrev}>
-            ⏮
-          </button>
-          <button className="player__side" onClick={onNext} disabled={!hasNext}>
-            ⏭
-          </button>
-        </div>
+        <button className="player__icon" onClick={() => seekBy(-10)} aria-label="Назад 10 сек">
+          <Icon.Rewind />
+        </button>
+        <button className="player__play" onClick={togglePlay} aria-label="Играть или пауза">
+          {playing ? <Icon.Pause /> : <Icon.Play />}
+        </button>
+        <button className="player__icon" onClick={() => seekBy(10)} aria-label="Вперёд 10 сек">
+          <Icon.Forward />
+        </button>
+        <button className="player__icon" onClick={onNext} disabled={!hasNext} aria-label="Следующий">
+          <Icon.Next />
+        </button>
       </div>
 
       <div className="player__progress">
@@ -122,6 +163,17 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
           onChange={(e) => handleSeek(Number(e.target.value))}
         />
         <span>{formatTime(duration)}</span>
+      </div>
+
+      <div className="player__volume">
+        <Icon.Volume />
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={volume}
+          onChange={(e) => setVolume(Number(e.target.value))}
+        />
       </div>
     </div>
   );
