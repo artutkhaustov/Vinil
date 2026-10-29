@@ -21,7 +21,6 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(50);
 
   useEffect(() => {
     if (!playing) return;
@@ -38,10 +37,6 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
     setCurrent(0);
     setDuration(0);
   }, [videoId]);
-
-  useEffect(() => {
-    playerRef.current?.setVolume(volume);
-  }, [volume]);
 
   if (!videoId) return null;
 
@@ -61,6 +56,12 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
     }
   };
 
+  const seekBy = (delta: number) => {
+    const p = playerRef.current;
+    if (!p) return;
+    p.seekTo(Math.max(0, current + delta), true);
+  };
+
   const handleSeek = (value: number) => {
     playerRef.current?.seekTo(value, true);
     setCurrent(value);
@@ -73,7 +74,6 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
         opts={opts}
         onReady={(e) => {
           playerRef.current = e.target;
-          e.target.setVolume(volume);
           setDuration(e.target.getDuration());
         }}
         onPlay={() => setPlaying(true)}
@@ -84,22 +84,31 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
         }}
       />
 
-      <div className="player__controls">
-        <button className="player__icon" onClick={onPrev} disabled={!hasPrev}>
-          ⏮
+      <div className="player__row">
+        <button className="player__side" disabled aria-hidden>
+          ☰
         </button>
-        <button className="player__icon" onClick={() => playerRef.current?.seekTo(Math.max(0, current - 10), true)}>
-          ⏪
-        </button>
-        <button className="player__play" onClick={togglePlay}>
-          {playing ? '❚❚' : '▶'}
-        </button>
-        <button className="player__icon" onClick={() => playerRef.current?.seekTo(current + 10, true)}>
-          ⏩
-        </button>
-        <button className="player__icon" onClick={onNext} disabled={!hasNext}>
-          ⏭
-        </button>
+
+        <div className="player__controls">
+          <button className="player__icon" onClick={() => seekBy(-10)}>
+            ⏪
+          </button>
+          <button className="player__play" onClick={togglePlay}>
+            {playing ? '❚❚' : '▶'}
+          </button>
+          <button className="player__icon" onClick={() => seekBy(10)}>
+            ⏩
+          </button>
+        </div>
+
+        <div className="player__side-buttons">
+          <button className="player__side" onClick={onPrev} disabled={!hasPrev}>
+            ⏮
+          </button>
+          <button className="player__side" onClick={onNext} disabled={!hasNext}>
+            ⏭
+          </button>
+        </div>
       </div>
 
       <div className="player__progress">
@@ -113,17 +122,6 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
           onChange={(e) => handleSeek(Number(e.target.value))}
         />
         <span>{formatTime(duration)}</span>
-      </div>
-
-      <div className="player__volume">
-        🔊
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-        />
       </div>
     </div>
   );
