@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import YouTube, { type YouTubeProps } from 'react-youtube';
+import './Player.css';
 
 type Props = {
   videoId: string | null;
@@ -14,24 +15,6 @@ function formatTime(sec: number) {
   const m = Math.floor(s / 60);
   return `${m}:${String(s % 60).padStart(2, '0')}`;
 }
-
-const barStyle: React.CSSProperties = {
-  position: 'fixed',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  background: 'rgba(20, 20, 26, 0.6)',
-  backdropFilter: 'blur(16px)',
-  WebkitBackdropFilter: 'blur(16px)',
-  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-  padding: '12px 16px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: 8,
-  color: '#f2f2f5',
-  zIndex: 1000,
-};
 
 export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
   const playerRef = useRef<any>(null);
@@ -84,7 +67,7 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
   };
 
   return (
-    <div style={barStyle}>
+    <div className="player">
       <YouTube
         videoId={videoId}
         opts={opts}
@@ -101,13 +84,25 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
         }}
       />
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        <button onClick={onPrev} disabled={!hasPrev}>⏮</button>
-        <button onClick={togglePlay}>{playing ? '⏸ Пауза' : '▶ Играть'}</button>
-        <button onClick={onNext} disabled={!hasNext}>⏭</button>
+      <div className="player__controls">
+        <button className="player__icon" onClick={onPrev} disabled={!hasPrev}>
+          ⏮
+        </button>
+        <button className="player__icon" onClick={() => playerRef.current?.seekTo(Math.max(0, current - 10), true)}>
+          ⏪
+        </button>
+        <button className="player__play" onClick={togglePlay}>
+          {playing ? '❚❚' : '▶'}
+        </button>
+        <button className="player__icon" onClick={() => playerRef.current?.seekTo(current + 10, true)}>
+          ⏩
+        </button>
+        <button className="player__icon" onClick={onNext} disabled={!hasNext}>
+          ⏭
+        </button>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', maxWidth: 600 }}>
+      <div className="player__progress">
         <span>{formatTime(current)}</span>
         <input
           type="range"
@@ -116,12 +111,11 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
           step={1}
           value={current}
           onChange={(e) => handleSeek(Number(e.target.value))}
-          style={{ flex: 1 }}
         />
         <span>{formatTime(duration)}</span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="player__volume">
         🔊
         <input
           type="range"
@@ -129,7 +123,6 @@ export function Player({ videoId, hasPrev, hasNext, onPrev, onNext }: Props) {
           max={100}
           value={volume}
           onChange={(e) => setVolume(Number(e.target.value))}
-          style={{ width: 160 }}
         />
       </div>
     </div>
