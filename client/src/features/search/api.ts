@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+
 export type Track = {
   id: string;
   title: string;
@@ -7,7 +9,7 @@ export type Track = {
 
 export async function searchTracks(query: string): Promise<Track[]> {
   const res = await fetch(
-    `http://localhost:3000/api/search?q=${encodeURIComponent(query)}`
+    `${API_URL}/api/search?q=${encodeURIComponent(query)}`
   );
   const data = await res.json();
   if (!res.ok) {
