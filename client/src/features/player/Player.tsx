@@ -128,6 +128,13 @@ export function Player({
 
   return (
     <div className="player">
+      {thumbnail && (
+        <div
+          className="player__bg"
+          style={{ backgroundImage: `url(${thumbnail})` }}
+        />
+      )}
+
       <YouTube
         videoId={videoId}
         opts={opts}

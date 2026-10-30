@@ -4,14 +4,26 @@
   bottom: 16px;
   transform: translateX(-50%);
   width: min(880px, calc(100% - 32px));
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  padding: 12px 20px 14px;
+  border-radius: 24px;
+  padding: 14px 22px 16px;
   color: #ffffff;
   z-index: 1000;
+  overflow: hidden;
+}
+
+.player__bg {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px) brightness(0.55);
+  transform: scale(1.2);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .player__top {
@@ -25,23 +37,27 @@
 .player__track {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   min-width: 0;
 }
 
 .player__cover {
-  width: 52px;
-  height: 39px;
+  width: 96px;
+  height: 72px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
   flex-shrink: 0;
 }
 
 .player__title {
-  font-size: 14px;
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1;
 }
 
 .player__controls {
@@ -110,16 +126,24 @@
 
 @media (max-width: 640px) {
   .player {
-    padding: 10px 12px 12px;
+    padding: 12px 14px 14px;
   }
 
   .player__top {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
-  .player__track,
+  .player__track {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .player__title {
+    text-align: center;
+  }
+
   .player__volume {
     justify-content: center;
     width: 100%;
