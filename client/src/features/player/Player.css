@@ -179,21 +179,20 @@
   align-items: center;
 }
 
-/* Левая колонка: смещена вниз и левее */
+/* Левая колонка: ниже и левее */
 .player__left {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  padding-left: 0;
   padding-top: 14vh;
-  margin-left: -4vw;
+  margin-left: -8vw;
 }
 
-/* Винил с текстурой */
+/* Винил: больше, с текстурой */
 .vinyl {
   position: relative;
-  width: min(44vw, 500px);
+  width: min(50vw, 580px);
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -209,7 +208,6 @@
   animation-play-state: paused;
 }
 
-/* Сам диск: канавки, блик и светлая кромка */
 .vinyl__disc {
   position: absolute;
   inset: 0;
@@ -237,7 +235,6 @@
     inset 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
-/* Тонкие световые кольца поверх канавок */
 .vinyl__disc::after {
   content: '';
   position: absolute;
@@ -253,11 +250,11 @@
   pointer-events: none;
 }
 
-/* Центральная обложка */
+/* Центральная обложка больше */
 .vinyl__label {
   position: relative;
-  width: 40%;
-  height: 40%;
+  width: 46%;
+  height: 46%;
   object-fit: cover;
   border-radius: 50%;
   border: 3px solid #0a0a0a;
@@ -375,12 +372,17 @@
 
   .player__left {
     gap: 14px;
-    padding-top: 0;
+    padding-top: 4vh;
     margin-left: 0;
   }
 
   .vinyl {
-    width: min(78vw, 360px);
+    width: min(86vw, 420px);
+  }
+
+  .vinyl__label {
+    width: 46%;
+    height: 46%;
   }
 
   .player__right {
