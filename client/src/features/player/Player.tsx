@@ -185,8 +185,16 @@ export function Player({
     </div>
   );
 
+  const classes = [
+    'player',
+    expanded ? 'player--expanded' : '',
+    playing ? '' : 'player--paused',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div className={`player ${expanded ? 'player--expanded' : ''}`}>
+    <div className={classes}>
       {thumbnail && (
         <div
           className="player__bg"
