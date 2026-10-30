@@ -5,8 +5,8 @@
   transform: translateX(-50%);
   width: min(880px, calc(100% - 32px));
   background: rgba(10, 10, 10, 0.3);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(32px) saturate(140%);
+  -webkit-backdrop-filter: blur(32px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 14px 22px 16px;
@@ -20,11 +20,11 @@
   inset: -40px;
   background-size: cover;
   background-position: center;
-  filter: blur(40px) brightness(0.6);
+  filter: blur(60px) brightness(0.6);
   transform: scale(1.2);
   z-index: -1;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .player__top {
@@ -123,52 +123,58 @@
   accent-color: #ffffff;
 }
 
-/* Телефон: компактная карточка с группировкой по центру */
+/* Телефон: компактная прямоугольная карточка со скруглёнными краями */
 @media (max-width: 640px) {
   .player {
     bottom: 10px;
-    width: calc(100% - 20px);
-    padding: 12px 14px 12px;
-    border-radius: 22px;
+    width: min(340px, calc(100% - 32px));
+    padding: 10px 12px 10px;
+    border-radius: 16px;
+    background: rgba(10, 10, 10, 0.35);
+    backdrop-filter: blur(28px) saturate(140%);
+    -webkit-backdrop-filter: blur(28px) saturate(140%);
+  }
+
+  .player__bg {
+    filter: blur(50px) brightness(0.6);
   }
 
   .player__top {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 6px;
+    margin-bottom: 6px;
   }
 
   .player__track {
     flex-direction: column;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     width: 100%;
   }
 
   .player__cover {
-    width: 64px;
-    height: 48px;
-    border-radius: 10px;
+    width: 56px;
+    height: 42px;
+    border-radius: 8px;
   }
 
   .player__title {
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
-    max-width: 100%;
   }
 
   .player__controls {
-    gap: 12px;
+    gap: 10px;
   }
 
   .player__icon {
-    padding: 4px;
+    padding: 3px;
   }
 
   .player__play {
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
   }
 
   .player__volume {
@@ -177,6 +183,6 @@
 
   .player__progress {
     font-size: 11px;
-    gap: 8px;
+    gap: 6px;
   }
 }
