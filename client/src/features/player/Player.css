@@ -1,7 +1,7 @@
 .player {
   position: fixed;
   left: 50%;
-  bottom: 16px;
+  bottom: 12px;
   transform: translateX(-50%);
   width: min(880px, calc(100% - 32px));
   background: rgba(0, 0, 0, 0.45);
@@ -9,13 +9,12 @@
   -webkit-backdrop-filter: blur(32px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-  padding: 14px 22px 16px;
+  padding: 8px 18px 10px;
   color: #ffffff;
   z-index: 1000;
   overflow: hidden;
 }
 
-/* Размытый фон из цветов обложки (виден только в развёрнутом режиме) */
 .player__bg {
   position: absolute;
   inset: -80px;
@@ -30,15 +29,15 @@
 
 .player__expand {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   z-index: 5;
   background: none;
   border: none;
   outline: none;
   color: #ffffff;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   cursor: pointer;
   display: flex;
@@ -51,7 +50,7 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .player__track {
@@ -62,17 +61,17 @@
 }
 
 .player__cover {
-  width: 80px;
-  height: 80px;
+  width: 56px;
+  height: 56px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 10px;
   flex-shrink: 0;
   aspect-ratio: 1 / 1;
 }
 
 .player__title {
   font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -84,7 +83,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .player__volume {
@@ -109,7 +108,7 @@
   border: none;
   color: #ffffff;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,8 +120,8 @@
 }
 
 .player__play {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -138,7 +137,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 12px;
   color: #cccccc;
   font-variant-numeric: tabular-nums;
 }
@@ -147,7 +146,7 @@
   flex: 1;
 }
 
-/* ===== Развёрнутый режим (ПК и телефон) ===== */
+/* ===== Развёрнутый режим ===== */
 .player--expanded {
   position: fixed;
   top: 0;
@@ -155,71 +154,129 @@
   right: 0;
   bottom: 0;
   transform: none;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100dvh;
   border-radius: 0;
   border: none;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  display: flex;
-  flex-direction: column;
-  padding: 56px 24px 28px;
+  padding: 56px 40px 28px;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .player--expanded .player__bg {
   display: block;
 }
 
-.player--expanded .player__top {
-  flex: 1;
+.player--expanded .player__expand {
+  color: #ffffff;
+}
+
+.player__stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 40px;
+  height: 100%;
+  align-items: center;
+}
+
+.player__left {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 0;
-  width: 100%;
+  gap: 20px;
 }
 
-.player--expanded .player__track {
-  flex-direction: column;
+/* Винил: диск с обложкой в центре */
+.vinyl {
+  position: relative;
+  width: min(38vw, 420px);
+  aspect-ratio: 1 / 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  width: 100%;
 }
 
-.player--expanded .player__cover {
-  width: min(72vw, 420px);
-  height: auto;
-  aspect-ratio: 1 / 1;
-  border-radius: 18px;
+.vinyl__disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #111 0 30%, #1a1a1a 31% 33%, #0a0a0a 34% 40%, #161616 41% 43%, #0a0a0a 44% 100%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
-.player--expanded .player__title {
-  font-size: 20px;
-  white-space: normal;
+.vinyl__disc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 3px);
+}
+
+.vinyl__label {
+  position: relative;
+  width: 58%;
+  height: 58%;
+  object-fit: cover;
+  border-radius: 50%;
+  animation: spin 12s linear infinite;
+  animation-play-state: running;
+}
+
+.player--paused .vinyl__label {
+  animation-play-state: paused;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.player__left .player__title {
+  font-size: 22px;
   text-align: center;
+  white-space: normal;
 }
 
-.player--expanded .player__controls {
+.player__left .player__controls {
   gap: 26px;
-  margin-bottom: 22px;
 }
 
-.player--expanded .player__icon svg {
-  width: 32px;
-  height: 32px;
+.player__left .player__play {
+  width: 68px;
+  height: 68px;
 }
 
-.player--expanded .player__play {
-  width: 72px;
-  height: 72px;
+.player__right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  overflow-y: auto;
 }
 
-.player--expanded .player__play svg {
-  width: 36px;
-  height: 36px;
+.player__lyrics {
+  font-size: 22px;
+  line-height: 1.6;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: left;
+}
+
+.player__lyrics p {
+  margin: 0 0 12px;
+}
+
+.player__bottom {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .player--expanded .player__progress {
@@ -227,17 +284,15 @@
 }
 
 .player--expanded .player__volume {
-  display: flex;
   justify-content: center;
-  margin-top: 16px;
 }
 
-/* ===== Телефон: компактный плеер ===== */
+/* ===== Телефон ===== */
 @media (max-width: 640px) {
   .player {
     bottom: 6px;
     width: calc(100% - 24px);
-    padding: 8px 12px 10px;
+    padding: 6px 10px 8px;
     border-radius: 18px;
   }
 
@@ -247,75 +302,53 @@
   }
 
   .player__track {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
     width: 100%;
     padding-right: 28px;
   }
 
   .player__cover {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     border-radius: 8px;
   }
 
   .player__title {
     font-size: 13px;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  .player__controls {
-    gap: 10px;
-  }
-
-  .player__icon {
-    padding: 2px;
-  }
-
-  .player__play {
-    width: 38px;
-    height: 38px;
   }
 
   .player__volume {
     display: none;
   }
 
-  .player__progress {
-    font-size: 10px;
-    gap: 6px;
+  .player__play {
+    width: 36px;
+    height: 36px;
   }
 
   .player--expanded {
     padding: 56px 20px 28px;
   }
 
-  .player--expanded .player__cover {
+  .player__stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .player__left {
+    gap: 14px;
+  }
+
+  .vinyl {
     width: min(78vw, 360px);
-    height: auto;
-    border-radius: 18px;
   }
 
-  .player--expanded .player__track {
-    padding-right: 0;
+  .player__right {
+    display: none;
   }
 
-  .player--expanded .player__title {
+  .player--expanded .player__left .player__title {
     font-size: 20px;
-    text-align: center;
-  }
-
-  .player--expanded .player__icon svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  .player--expanded .player__play {
-    width: 72px;
-    height: 72px;
   }
 }
