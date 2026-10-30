@@ -1,4 +1,4 @@
-const CLIENT_ID = process.env.QhVEWrrJKvW4uSU5u5EoI0FTXYUGzy5k;
+const CLIENT_ID = process.env.SOUNDCLOUD_CLIENT_ID;
 const BASE_URL = 'https://api.soundcloud.com';
 
 function toHighResArtwork(url) {
