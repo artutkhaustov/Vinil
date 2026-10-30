@@ -42,10 +42,10 @@
 }
 
 .player__cover {
-  width: 96px;
-  height: 72px;
+  width: 140px;
+  height: 105px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 14px;
   flex-shrink: 0;
 }
 
@@ -136,8 +136,15 @@
   }
 
   .player__track {
+    flex-direction: column;
     justify-content: center;
+    gap: 8px;
     width: 100%;
+  }
+
+  .player__cover {
+    width: 200px;
+    height: 150px;
   }
 
   .player__title {
@@ -145,11 +152,6 @@
   }
 
   .player__volume {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .player__volume input[type='range'] {
-    width: 160px;
+    display: none;
   }
 }
