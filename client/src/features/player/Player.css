@@ -3,17 +3,16 @@
   left: 50%;
   bottom: 16px;
   transform: translateX(-50%);
-  width: min(560px, calc(100% - 32px));
-  background: rgba(10, 10, 10, 0.55);
+  width: min(880px, calc(100% - 32px));
+  background: rgba(10, 10, 10, 0.35);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 24px;
-  padding: 18px 22px 18px;
+  padding: 14px 22px 16px;
   color: #ffffff;
   z-index: 1000;
   overflow: hidden;
-  text-align: center;
 }
 
 .player__bg {
@@ -21,52 +20,63 @@
   inset: -40px;
   background-size: cover;
   background-position: center;
-  filter: blur(40px) brightness(0.5);
+  filter: blur(40px) brightness(0.6);
   transform: scale(1.2);
   z-index: -1;
   pointer-events: none;
+  opacity: 0.6;
 }
 
 .player__top {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .player__track {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  width: 100%;
+  gap: 10px;
+  min-width: 0;
 }
 
 .player__cover {
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 4 / 3;
+  width: 96px;
+  height: 72px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 
 .player__title {
   font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
 }
 
 .player__controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 16px;
+}
+
+.player__volume {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  color: #cccccc;
+}
+
+.player__volume input[type='range'] {
+  width: 110px;
+  accent-color: #ffffff;
 }
 
 .player__icon {
@@ -86,8 +96,8 @@
 }
 
 .player__play {
-  width: 60px;
-  height: 60px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -106,7 +116,6 @@
   font-size: 13px;
   color: #cccccc;
   font-variant-numeric: tabular-nums;
-  margin-bottom: 10px;
 }
 
 .player__progress input[type='range'] {
@@ -114,29 +123,58 @@
   accent-color: #ffffff;
 }
 
-.player__volume {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #cccccc;
-}
-
-.player__volume input[type='range'] {
-  width: 140px;
-  accent-color: #ffffff;
-}
-
 @media (max-width: 640px) {
   .player {
-    padding: 14px 14px 14px;
+    bottom: 8px;
+    width: calc(100% - 24px);
+    padding: 8px 12px 10px;
+    border-radius: 18px;
+  }
+
+  .player__top {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .player__track {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .player__cover {
+    width: 48px;
+    height: 36px;
+    border-radius: 6px;
+  }
+
+  .player__title {
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .player__controls {
+    gap: 10px;
+  }
+
+  .player__icon {
+    padding: 2px;
+  }
+
+  .player__play {
+    width: 42px;
+    height: 42px;
   }
 
   .player__volume {
     display: none;
   }
 
-  .player__cover {
-    max-width: 280px;
+  .player__progress {
+    font-size: 11px;
+    gap: 6px;
   }
 }
