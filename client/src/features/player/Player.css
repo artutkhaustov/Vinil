@@ -4,15 +4,46 @@
   bottom: 16px;
   transform: translateX(-50%);
   width: min(880px, calc(100% - 32px));
-  background: rgba(12, 12, 12, 0.72);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(32px) saturate(120%);
+  -webkit-backdrop-filter: blur(32px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 14px 22px 16px;
   color: #ffffff;
   z-index: 1000;
   overflow: hidden;
+}
+
+/* Размытый фон из цветов обложки (виден только в развёрнутом режиме) */
+.player__bg {
+  position: absolute;
+  inset: -80px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(80px) brightness(0.45) saturate(140%);
+  transform: scale(1.3);
+  z-index: -1;
+  pointer-events: none;
+  display: none;
+}
+
+.player__expand {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  background: none;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .player__top {
@@ -31,11 +62,12 @@
 }
 
 .player__cover {
-  width: 96px;
-  height: 72px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 12px;
   flex-shrink: 0;
+  aspect-ratio: 1 / 1;
 }
 
 .player__title {
@@ -45,6 +77,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .player__controls {
@@ -114,7 +147,92 @@
   flex: 1;
 }
 
-/* Телефон: панель почти на всю ширину, обложка и название сверху по центру */
+/* ===== Развёрнутый режим (ПК и телефон) ===== */
+.player--expanded {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  display: flex;
+  flex-direction: column;
+  padding: 56px 24px 28px;
+}
+
+.player--expanded .player__bg {
+  display: block;
+}
+
+.player--expanded .player__top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
+}
+
+.player--expanded .player__track {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.player--expanded .player__cover {
+  width: min(72vw, 420px);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+}
+
+.player--expanded .player__title {
+  font-size: 20px;
+  white-space: normal;
+  text-align: center;
+}
+
+.player--expanded .player__controls {
+  gap: 26px;
+  margin-bottom: 22px;
+}
+
+.player--expanded .player__icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.player--expanded .player__play {
+  width: 72px;
+  height: 72px;
+}
+
+.player--expanded .player__play svg {
+  width: 36px;
+  height: 36px;
+}
+
+.player--expanded .player__progress {
+  font-size: 14px;
+}
+
+.player--expanded .player__volume {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ===== Телефон: компактный плеер ===== */
 @media (max-width: 640px) {
   .player {
     bottom: 6px;
@@ -124,30 +242,30 @@
   }
 
   .player__top {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 4px;
+    display: block;
     margin-bottom: 4px;
   }
 
   .player__track {
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
     width: 100%;
+    padding-right: 28px;
   }
 
   .player__cover {
-    width: 72px;
-    height: 54px;
-    border-radius: 10px;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
   }
 
   .player__title {
     font-size: 13px;
-    text-align: center;
-    white-space: normal;
-    max-width: 90%;
+    text-align: left;
+    white-space: nowrap;
   }
 
   .player__controls {
@@ -171,57 +289,33 @@
     font-size: 10px;
     gap: 6px;
   }
-  .player__expand {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  color: #ffffff;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.player--expanded {
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  transform: none;
-  border-radius: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 24px;
-}
+  .player--expanded {
+    padding: 56px 20px 28px;
+  }
 
-.player--expanded .player__cover {
-  width: min(70vw, 420px);
-  height: auto;
-  aspect-ratio: 4 / 3;
-  border-radius: 16px;
-}
+  .player--expanded .player__cover {
+    width: min(78vw, 360px);
+    height: auto;
+    border-radius: 18px;
+  }
 
-.player--expanded .player__title {
-  font-size: 20px;
-  white-space: normal;
-  text-align: center;
-}
+  .player--expanded .player__track {
+    padding-right: 0;
+  }
 
-.player--expanded .player__volume {
-  display: flex;
-}
+  .player--expanded .player__title {
+    font-size: 20px;
+    text-align: center;
+  }
 
-.player--expanded .player__track {
-  flex-direction: column;
-  justify-content: center;
-}
+  .player--expanded .player__icon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .player--expanded .player__play {
+    width: 72px;
+    height: 72px;
+  }
 }

@@ -65,10 +65,11 @@
 }
 
 .track__cover {
-  width: 96px;
-  aspect-ratio: 4 / 3;
+  width: 72px;
+  height: 72px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
