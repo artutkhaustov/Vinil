@@ -4,11 +4,11 @@
   bottom: 16px;
   transform: translateX(-50%);
   width: min(880px, calc(100% - 32px));
-  background: rgba(10, 10, 10, 0.35);
+  background: rgba(10, 10, 10, 0.3);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 14px 22px 16px;
   color: #ffffff;
   z-index: 1000;
@@ -46,7 +46,7 @@
   width: 96px;
   height: 72px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
   flex-shrink: 0;
 }
 
@@ -123,50 +123,52 @@
   accent-color: #ffffff;
 }
 
+/* Телефон: компактная карточка с группировкой по центру */
 @media (max-width: 640px) {
   .player {
-    bottom: 8px;
-    width: calc(100% - 24px);
-    padding: 8px 12px 10px;
-    border-radius: 18px;
+    bottom: 10px;
+    width: calc(100% - 20px);
+    padding: 12px 14px 12px;
+    border-radius: 22px;
   }
 
   .player__top {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 4px;
-    margin-bottom: 4px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .player__track {
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
   }
 
   .player__cover {
-    width: 48px;
-    height: 36px;
-    border-radius: 6px;
+    width: 64px;
+    height: 48px;
+    border-radius: 10px;
   }
 
   .player__title {
-    font-size: 13px;
+    font-size: 14px;
     text-align: center;
+    max-width: 100%;
   }
 
   .player__controls {
-    gap: 10px;
+    gap: 12px;
   }
 
   .player__icon {
-    padding: 2px;
+    padding: 4px;
   }
 
   .player__play {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
   }
 
   .player__volume {
@@ -175,6 +177,6 @@
 
   .player__progress {
     font-size: 11px;
-    gap: 6px;
+    gap: 8px;
   }
 }
