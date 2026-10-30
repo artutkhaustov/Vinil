@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import YouTube, { type YouTubeProps } from 'react-youtube';
+import {
+  playTrack,
+  togglePlay as widgetToggle,
+  setVolume as widgetVolume,
+  seekTo as widgetSeek,
+  onPlayState,
+  onProgress,
+} from './soundcloudWidget';
 import './Player.css';
 
 type Props = {
-  videoId: string | null;
+  permalinkUrl: string | null;
   title: string;
+  artist: string;
   thumbnail: string;
   hasPrev: boolean;
   hasNext: boolean;
@@ -73,17 +81,17 @@ const Icon = {
 };
 
 export function Player({
-  videoId,
+  permalinkUrl,
   title,
+  artist,
   thumbnail,
   hasPrev,
   hasNext,
   onPrev,
   onNext,
 }: Props) {
-  const playerRef = useRef<any>(null);
   const vinylRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ startAngle: number; lastAngle: number; startTime: number } | null>(null);
+  const dragRef = useRef<{ lastAngle: number } | null>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -92,61 +100,40 @@ export function Player({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!playing) return;
-    const id = setInterval(() => {
-      const p = playerRef.current;
-      if (!p) return;
-      setCurrent(p.getCurrentTime());
-      setDuration(p.getDuration());
-    }, 500);
-    return () => clearInterval(id);
-  }, [playing]);
-
-  useEffect(() => {
-    setCurrent(0);
-    setDuration(0);
-  }, [videoId]);
-
-  useEffect(() => {
-    playerRef.current?.setVolume(volume);
-  }, [volume]);
-
-  useEffect(() => {
     setMounted(true);
+    onPlayState(setPlaying);
+    onProgress((sec, dur) => {
+      setCurrent(sec);
+      setDuration(dur);
+    });
   }, []);
 
-  if (!videoId) return null;
+  useEffect(() => {
+    if (permalinkUrl) playTrack(permalinkUrl);
+    setCurrent(0);
+    setDuration(0);
+  }, [permalinkUrl]);
 
-  const opts: YouTubeProps['opts'] = {
-    height: '0',
-    width: '0',
-    playerVars: { autoplay: 1 },
-  };
+  useEffect(() => {
+    widgetVolume(volume);
+  }, [volume]);
 
-  const togglePlay = () => {
-    const p = playerRef.current;
-    if (!p) return;
-    if (playing) {
-      p.pauseVideo();
-    } else {
-      p.playVideo();
-    }
-  };
+  if (!permalinkUrl) return null;
+
+  const togglePlay = () => widgetToggle();
 
   const seekBy = (delta: number) => {
-    const p = playerRef.current;
-    if (!p) return;
     const target = Math.max(0, current + delta);
-    p.seekTo(target, true);
+    widgetSeek(target);
     setCurrent(target);
   };
 
   const handleSeek = (value: number) => {
-    playerRef.current?.seekTo(value, true);
+    widgetSeek(value);
     setCurrent(value);
   };
 
-  // Жест по пластинке: угол поворота переводится в секунды
+  // Жест по пластинке: полный оборот ≈ 30 секунд
   const angleOf = (e: React.PointerEvent<HTMLDivElement>) => {
     const el = vinylRef.current;
     if (!el) return 0;
@@ -158,8 +145,7 @@ export function Player({
 
   const onVinylDown = (e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
-    const a = angleOf(e);
-    dragRef.current = { startAngle: a, lastAngle: a, startTime: current };
+    dragRef.current = { lastAngle: angleOf(e) };
   };
 
   const onVinylMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -167,15 +153,13 @@ export function Player({
     if (!d) return;
     const a = angleOf(e);
     let delta = a - d.lastAngle;
-    // обработка перехода через -180/180
     if (delta > 180) delta -= 360;
     if (delta < -180) delta += 360;
     d.lastAngle = a;
-    // 1 полный оборот ≈ 30 секунд трека
     const seconds = (delta / 360) * 30;
     const target = Math.max(0, Math.min(duration || Infinity, current + seconds));
     setCurrent(target);
-    playerRef.current?.seekTo(target, true);
+    widgetSeek(target);
   };
 
   const onVinylUp = () => {
@@ -257,22 +241,6 @@ export function Player({
         {expanded ? <Icon.Collapse /> : <Icon.Expand />}
       </button>
 
-      <YouTube
-        videoId={videoId}
-        opts={opts}
-        onReady={(e) => {
-          playerRef.current = e.target;
-          e.target.setVolume(volume);
-          setDuration(e.target.getDuration());
-        }}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnd={() => {
-          setPlaying(false);
-          if (hasNext) onNext();
-        }}
-      />
-
       {expanded ? (
         <div className="player__stage">
           <div className="player__left">
@@ -290,6 +258,7 @@ export function Player({
               )}
             </div>
             <span className="player__title">{title}</span>
+            <span className="player__artist">{artist}</span>
             {controls}
           </div>
 
@@ -309,7 +278,10 @@ export function Player({
           <div className="player__top">
             <div className="player__track">
               {thumbnail && <img className="player__cover" src={thumbnail} alt="" />}
-              <span className="player__title">{title}</span>
+              <div className="player__info">
+                <span className="player__title">{title}</span>
+                <span className="player__artist">{artist}</span>
+              </div>
             </div>
           </div>
           {controls}

@@ -1,11 +1,12 @@
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
-
 export type Track = {
   id: string;
   title: string;
-  thumbnail: string;
-  duration: number;
+  artist: string;
+  artworkUrl: string | null;
+  permalinkUrl: string;
 };
+
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 export async function searchTracks(query: string): Promise<Track[]> {
   const res = await fetch(

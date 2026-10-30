@@ -26,11 +26,13 @@ export async function getWidget(): Promise<any> {
       const iframe = document.createElement('iframe');
       iframe.id = 'sc-widget';
       iframe.allow = 'autoplay';
-      iframe.style.display = 'none';
+      iframe.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
       iframe.src = 'https://w.soundcloud.com/player/?url=';
       document.body.appendChild(iframe);
       widget = window.SC.Widget(iframe);
-      await new Promise<void>((resolve) => widget.bind(window.SC.Widget.Events.READY, () => resolve()));
+      await new Promise<void>((resolve) =>
+        widget.bind(window.SC.Widget.Events.READY, () => resolve())
+      );
       return widget;
     })();
   }
@@ -39,16 +41,7 @@ export async function getWidget(): Promise<any> {
 
 export async function playTrack(permalinkUrl: string) {
   const w = await getWidget();
-  return new Promise<void>((resolve) => {
-    w.load(permalinkUrl, {
-      auto_play: true,
-      show_artwork: false,
-      callback: () => {
-        w.play();
-        resolve();
-      },
-    });
-  });
+  w.load(permalinkUrl, { auto_play: true, show_artwork: false });
 }
 
 export async function togglePlay() {
@@ -57,7 +50,6 @@ export async function togglePlay() {
 }
 
 export async function setVolume(percent: number) {
-  // Widget принимает значение от 0 до 1
   const w = await getWidget();
   w.setVolume(Math.max(0, Math.min(1, percent / 100)));
 }
@@ -67,12 +59,18 @@ export async function seekTo(seconds: number) {
   w.seekTo(seconds * 1000);
 }
 
-export async function getPosition(): Promise<number> {
-  const w = await getWidget();
-  return new Promise((resolve) => w.getPosition((ms: number) => resolve(ms / 1000)));
+export function onPlayState(cb: (playing: boolean) => void) {
+  return getWidget().then((w) => {
+    w.bind(window.SC.Widget.Events.PLAY, () => cb(true));
+    w.bind(window.SC.Widget.Events.PAUSE, () => cb(false));
+    w.bind(window.SC.Widget.Events.FINISH, () => cb(false));
+  });
 }
 
-export async function getDuration(): Promise<number> {
-  const w = await getWidget();
-  return new Promise((resolve) => w.getDuration((ms: number) => resolve(ms / 1000)));
+export function onProgress(cb: (seconds: number, duration: number) => void) {
+  return getWidget().then((w) => {
+    w.bind(window.SC.Widget.Events.PLAY_PROGRESS, (e: { currentPosition: number }) => {
+      w.getDuration((ms: number) => cb(e.currentPosition / 1000, ms / 1000));
+    });
+  });
 }

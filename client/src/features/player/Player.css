@@ -471,4 +471,8 @@
   .player--expanded .player__left .player__title {
     font-size: 20px;
   }
+  .player__artist {
+  font-size: 12px;
+  color: #aaaaaa;
+}
 }
