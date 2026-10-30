@@ -1,13 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { searchTracks } from './api';
 import { Player } from '../player/Player';
 import './SearchBar.css';
 
+const STORAGE_KEY = 'vinil-search';
+
+type Saved = { query: string; index: number | null };
+
+function loadSaved(): Saved {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw) as Saved;
+  } catch {
+    // игнорируем повреждённые данные
+  }
+  return { query: '', index: null };
+}
+
 export function SearchBar() {
-  const [input, setInput] = useState('');
-  const [query, setQuery] = useState('');
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const saved = loadSaved();
+  const [input, setInput] = useState(saved.query);
+  const [query, setQuery] = useState(saved.query);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(saved.index);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ query, index: currentIndex }));
+  }, [query, currentIndex]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['search', query],

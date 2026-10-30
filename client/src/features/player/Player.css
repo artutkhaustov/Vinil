@@ -117,50 +117,50 @@
 /* Телефон: панель почти на всю ширину, обложка и название сверху по центру */
 @media (max-width: 640px) {
   .player {
-    bottom: 8px;
-    width: calc(100% - 16px);
-    padding: 12px 14px 14px;
-    border-radius: 20px;
+    bottom: 6px;
+    width: calc(100% - 24px);
+    padding: 8px 12px 10px;
+    border-radius: 18px;
   }
 
   .player__top {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
+    gap: 4px;
+    margin-bottom: 4px;
   }
 
   .player__track {
     flex-direction: column;
     justify-content: center;
-    gap: 8px;
+    gap: 4px;
     width: 100%;
   }
 
   .player__cover {
-    width: 120px;
-    height: 90px;
-    border-radius: 12px;
+    width: 72px;
+    height: 54px;
+    border-radius: 10px;
   }
 
   .player__title {
-    font-size: 15px;
+    font-size: 13px;
     text-align: center;
     white-space: normal;
     max-width: 90%;
   }
 
   .player__controls {
-    gap: 14px;
+    gap: 10px;
   }
 
   .player__icon {
-    padding: 4px;
+    padding: 2px;
   }
 
   .player__play {
-    width: 46px;
-    height: 46px;
+    width: 38px;
+    height: 38px;
   }
 
   .player__volume {
@@ -168,7 +168,7 @@
   }
 
   .player__progress {
-    font-size: 11px;
-    gap: 8px;
+    font-size: 10px;
+    gap: 6px;
   }
 }
