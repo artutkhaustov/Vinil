@@ -74,11 +74,15 @@ export function SearchBar() {
             key={track.id}
             className={`track ${index === currentIndex ? 'track--active' : ''}`}
           >
-            <img className="track__cover" src={track.thumbnail} alt="" />
-            <span className="track__info">{track.title}</span>
-            <span className="track__duration">
-              {Math.floor(track.duration / 60)}:
-              {String(track.duration % 60).padStart(2, '0')}
+            {track.artworkUrl ? (
+              <img className="track__cover" src={track.artworkUrl} alt="" />
+            ) : (
+              <div className="track__cover" />
+            )}
+            <span className="track__info">
+              {track.title}
+              <br />
+              <small>{track.artist}</small>
             </span>
             <button
               className="track__play"
@@ -91,9 +95,10 @@ export function SearchBar() {
       </ul>
 
       <Player
-        videoId={currentTrack?.id ?? null}
+        permalinkUrl={currentTrack?.permalinkUrl ?? null}
         title={currentTrack?.title ?? ''}
-        thumbnail={currentTrack?.thumbnail ?? ''}
+        artist={currentTrack?.artist ?? ''}
+        thumbnail={currentTrack?.artworkUrl ?? ''}
         hasPrev={hasPrev}
         hasNext={hasNext}
         onPrev={() =>
