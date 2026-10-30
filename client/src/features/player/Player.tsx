@@ -60,6 +60,16 @@ const Icon = {
       <path d="M16 8.5a5 5 0 0 1 0 7" />
     </svg>
   ),
+  Expand: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+    </svg>
+  ),
+  Collapse: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+    </svg>
+  ),
 };
 
 export function Player({
@@ -76,6 +86,7 @@ export function Player({
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(50);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!playing) return;
@@ -127,7 +138,14 @@ export function Player({
   };
 
   return (
-    <div className="player">
+    <div className={`player ${expanded ? 'player--expanded' : ''}`}>
+      <button
+        className="player__expand"
+        onClick={() => setExpanded((v) => !v)}
+        aria-label={expanded ? 'Свернуть' : 'Развернуть'}
+      >
+        {expanded ? <Icon.Collapse /> : <Icon.Expand />}
+      </button>
 
       <YouTube
         videoId={videoId}

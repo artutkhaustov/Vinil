@@ -13,19 +13,22 @@ function loadSaved(): Saved {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw) as Saved;
   } catch {
-    // игнорируем повреждённые данные
+    // повреждённые данные игнорируем
   }
   return { query: '', index: null };
 }
 
 export function SearchBar() {
-  const saved = loadSaved();
+  const [saved] = useState(loadSaved);
   const [input, setInput] = useState(saved.query);
   const [query, setQuery] = useState(saved.query);
   const [currentIndex, setCurrentIndex] = useState<number | null>(saved.index);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ query, index: currentIndex }));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ query, index: currentIndex })
+    );
   }, [query, currentIndex]);
 
   const { data, isLoading, error } = useQuery({
