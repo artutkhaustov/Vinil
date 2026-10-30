@@ -2,7 +2,8 @@
   position: fixed;
   left: 50%;
   bottom: 12px;
-  transform: translateX(-50%);
+  transform: translate(-50%, 20px) scale(0.96);
+  opacity: 0;
   width: min(880px, calc(100% - 32px));
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(32px) saturate(120%);
@@ -13,6 +14,17 @@
   color: #ffffff;
   z-index: 1000;
   overflow: hidden;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease,
+    width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.45s ease,
+    padding 0.45s ease;
+}
+
+.player--ready {
+  transform: translate(-50%, 0) scale(1);
+  opacity: 1;
 }
 
 .player__bg {
@@ -25,6 +37,7 @@
   z-index: -1;
   pointer-events: none;
   display: none;
+  transition: opacity 0.6s ease;
 }
 
 .player__expand {
@@ -43,6 +56,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.player__expand:hover {
+  transform: scale(1.12);
 }
 
 .player__top {
@@ -67,6 +85,7 @@
   border-radius: 10px;
   flex-shrink: 0;
   aspect-ratio: 1 / 1;
+  transition: transform 0.4s ease;
 }
 
 .player__title {
@@ -112,6 +131,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.player__icon:hover:not(:disabled) {
+  transform: scale(1.12);
+}
+
+.player__icon:active:not(:disabled) {
+  transform: scale(0.92);
 }
 
 .player__icon:disabled {
@@ -131,6 +159,15 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.player__play:hover {
+  transform: scale(1.08);
+}
+
+.player__play:active {
+  transform: scale(0.92);
 }
 
 .player__progress {
@@ -153,21 +190,42 @@
   left: 0;
   right: 0;
   bottom: 0;
-  transform: none;
+  transform: translate(0, 0) scale(1);
   width: 100vw;
+  height: 100vh;
   height: 100dvh;
   border-radius: 0;
   border: none;
-  background: rgba(0, 0, 0, 0.3);
+  background: #000000;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   padding: 56px 40px 28px;
   box-sizing: border-box;
   margin: 0;
+  animation: expandIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    transform: translate(0, 24px) scale(0.98);
+    border-radius: 20px;
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    border-radius: 0;
+  }
 }
 
 .player--expanded .player__bg {
   display: block;
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .player__stage {
@@ -177,9 +235,20 @@
   gap: 40px;
   height: 100%;
   align-items: center;
+  animation: stageIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
-/* Левая колонка: ниже и левее */
+@keyframes stageIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .player__left {
   display: flex;
   flex-direction: column;
@@ -189,7 +258,6 @@
   margin-left: -8vw;
 }
 
-/* Винил: больше, с текстурой */
 .vinyl {
   position: relative;
   width: min(50vw, 580px);
@@ -202,6 +270,14 @@
   box-shadow:
     0 0 0 2px rgba(255, 255, 255, 0.08),
     0 20px 50px rgba(0, 0, 0, 0.7);
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vinyl:active {
+  cursor: grabbing;
+  transform: scale(0.985);
 }
 
 .player--paused .vinyl {
@@ -250,7 +326,6 @@
   pointer-events: none;
 }
 
-/* Центральная обложка больше */
 .vinyl__label {
   position: relative;
   width: 46%;
@@ -260,21 +335,20 @@
   border: 3px solid #0a0a0a;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
   z-index: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .player__left .player__title {
   font-size: 22px;
   text-align: center;
   white-space: normal;
+  transition: opacity 0.3s ease;
 }
 
 .player__left .player__controls {
@@ -330,6 +404,10 @@
     border-radius: 18px;
   }
 
+  .player--ready {
+    transform: translate(-50%, 0) scale(1);
+  }
+
   .player__top {
     display: block;
     margin-bottom: 4px;
@@ -360,6 +438,12 @@
   }
 
   .player--expanded {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    transform: none;
     padding: 56px 20px 28px;
   }
 
@@ -378,11 +462,6 @@
 
   .vinyl {
     width: min(86vw, 420px);
-  }
-
-  .vinyl__label {
-    width: 46%;
-    height: 46%;
   }
 
   .player__right {

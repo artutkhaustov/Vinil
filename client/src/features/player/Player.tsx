@@ -82,11 +82,14 @@ export function Player({
   onNext,
 }: Props) {
   const playerRef = useRef<any>(null);
+  const vinylRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ startAngle: number; lastAngle: number; startTime: number } | null>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(50);
   const [expanded, setExpanded] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (!playing) return;
@@ -107,6 +110,10 @@ export function Player({
   useEffect(() => {
     playerRef.current?.setVolume(volume);
   }, [volume]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!videoId) return null;
 
@@ -129,12 +136,50 @@ export function Player({
   const seekBy = (delta: number) => {
     const p = playerRef.current;
     if (!p) return;
-    p.seekTo(Math.max(0, current + delta), true);
+    const target = Math.max(0, current + delta);
+    p.seekTo(target, true);
+    setCurrent(target);
   };
 
   const handleSeek = (value: number) => {
     playerRef.current?.seekTo(value, true);
     setCurrent(value);
+  };
+
+  // Жест по пластинке: угол поворота переводится в секунды
+  const angleOf = (e: React.PointerEvent<HTMLDivElement>) => {
+    const el = vinylRef.current;
+    if (!el) return 0;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    return (Math.atan2(e.clientY - cy, e.clientX - cx) * 180) / Math.PI;
+  };
+
+  const onVinylDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const a = angleOf(e);
+    dragRef.current = { startAngle: a, lastAngle: a, startTime: current };
+  };
+
+  const onVinylMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragRef.current;
+    if (!d) return;
+    const a = angleOf(e);
+    let delta = a - d.lastAngle;
+    // обработка перехода через -180/180
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+    d.lastAngle = a;
+    // 1 полный оборот ≈ 30 секунд трека
+    const seconds = (delta / 360) * 30;
+    const target = Math.max(0, Math.min(duration || Infinity, current + seconds));
+    setCurrent(target);
+    playerRef.current?.seekTo(target, true);
+  };
+
+  const onVinylUp = () => {
+    dragRef.current = null;
   };
 
   const controls = (
@@ -189,6 +234,7 @@ export function Player({
     'player',
     expanded ? 'player--expanded' : '',
     playing ? '' : 'player--paused',
+    mounted ? 'player--ready' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -230,10 +276,17 @@ export function Player({
       {expanded ? (
         <div className="player__stage">
           <div className="player__left">
-            <div className="vinyl">
+            <div
+              className="vinyl"
+              ref={vinylRef}
+              onPointerDown={onVinylDown}
+              onPointerMove={onVinylMove}
+              onPointerUp={onVinylUp}
+              onPointerCancel={onVinylUp}
+            >
               <div className="vinyl__disc" />
               {thumbnail && (
-                <img className="vinyl__label" src={thumbnail} alt="" />
+                <img className="vinyl__label" src={thumbnail} alt="" draggable={false} />
               )}
             </div>
             <span className="player__title">{title}</span>
@@ -242,7 +295,6 @@ export function Player({
 
           <div className="player__right">
             <div className="player__lyrics">
-              {/* Сюда можно вставить текст песни: строки внутри <p> */}
               <p>Текст песни появится здесь</p>
             </div>
           </div>
