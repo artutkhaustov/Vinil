@@ -14,17 +14,20 @@
   z-index: 1000;
 }
 
-  .player__top {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 8px;
-  }
+.player__top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
 
-  .player__track,
-  .player__volume {
-    justify-content: center;
-    width: 100%;
-  }
+.player__track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
 
 .player__cover {
   width: 52px;
@@ -48,13 +51,16 @@
   gap: 16px;
 }
 
-.player__volume input[type='range'] {
-  width: 110px;
-  accent-color: #ffffff;
+.player__volume {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  color: #cccccc;
 }
 
-  .player__volume input[type='range'] {
-    width: 160px;
+.player__volume input[type='range'] {
+  width: 110px;
   accent-color: #ffffff;
 }
 
@@ -100,4 +106,26 @@
 .player__progress input[type='range'] {
   flex: 1;
   accent-color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .player {
+    padding: 10px 12px 12px;
+  }
+
+  .player__top {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
+  }
+
+  .player__track,
+  .player__volume {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .player__volume input[type='range'] {
+    width: 160px;
+  }
 }
