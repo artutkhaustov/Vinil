@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { searchVideos } from '../services/youtubeSearch.js';
+import { searchTracks } from '../services/soundcloudSearch.js';
 
 const router = Router();
 
