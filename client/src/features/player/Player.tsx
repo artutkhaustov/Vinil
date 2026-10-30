@@ -44,12 +44,12 @@ const Icon = {
     </svg>
   ),
   Play: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
       <path d="M8 5v14l11-7z" />
     </svg>
   ),
   Pause: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
       <rect x="6" y="5" width="4" height="14" />
       <rect x="14" y="5" width="4" height="14" />
     </svg>
@@ -156,35 +156,24 @@ export function Player({
           {thumbnail && <img className="player__cover" src={thumbnail} alt="" />}
           <span className="player__title">{title}</span>
         </div>
+      </div>
 
-        <div className="player__controls">
-          <button className="player__icon" onClick={onPrev} disabled={!hasPrev} aria-label="Предыдущий">
-            <Icon.Prev />
-          </button>
-          <button className="player__icon" onClick={() => seekBy(-10)} aria-label="Назад 10 сек">
-            <Icon.Rewind />
-          </button>
-          <button className="player__play" onClick={togglePlay} aria-label="Играть или пауза">
-            {playing ? <Icon.Pause /> : <Icon.Play />}
-          </button>
-          <button className="player__icon" onClick={() => seekBy(10)} aria-label="Вперёд 10 сек">
-            <Icon.Forward />
-          </button>
-          <button className="player__icon" onClick={onNext} disabled={!hasNext} aria-label="Следующий">
-            <Icon.Next />
-          </button>
-        </div>
-
-        <div className="player__volume">
-          <Icon.Volume />
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
-          />
-        </div>
+      <div className="player__controls">
+        <button className="player__icon" onClick={onPrev} disabled={!hasPrev} aria-label="Предыдущий">
+          <Icon.Prev />
+        </button>
+        <button className="player__icon" onClick={() => seekBy(-10)} aria-label="Назад 10 сек">
+          <Icon.Rewind />
+        </button>
+        <button className="player__play" onClick={togglePlay} aria-label="Играть или пауза">
+          {playing ? <Icon.Pause /> : <Icon.Play />}
+        </button>
+        <button className="player__icon" onClick={() => seekBy(10)} aria-label="Вперёд 10 сек">
+          <Icon.Forward />
+        </button>
+        <button className="player__icon" onClick={onNext} disabled={!hasNext} aria-label="Следующий">
+          <Icon.Next />
+        </button>
       </div>
 
       <div className="player__progress">
@@ -198,6 +187,17 @@ export function Player({
           onChange={(e) => handleSeek(Number(e.target.value))}
         />
         <span>{formatTime(duration)}</span>
+      </div>
+
+      <div className="player__volume">
+        <Icon.Volume />
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={volume}
+          onChange={(e) => setVolume(Number(e.target.value))}
+        />
       </div>
     </div>
   );
