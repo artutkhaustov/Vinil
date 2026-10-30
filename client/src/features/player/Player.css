@@ -4,54 +4,28 @@
   bottom: 16px;
   transform: translateX(-50%);
   width: min(880px, calc(100% - 32px));
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.08)),
-    rgba(20, 20, 24, 0.28);
-  backdrop-filter: blur(32px) saturate(180%) brightness(1.1);
-  -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(1.1);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-top-color: rgba(255, 255, 255, 0.7);
-  border-left-color: rgba(255, 255, 255, 0.5);
-  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(32px) saturate(120%);
+  -webkit-backdrop-filter: blur(32px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   padding: 14px 22px 16px;
   color: #ffffff;
   z-index: 1000;
   overflow: hidden;
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Блик сверху, как на стекле */
-.player::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 45%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
-  border-radius: 24px 24px 60% 60% / 24px 24px 20% 20%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.player > * {
-  position: relative;
-  z-index: 1;
-}
-
+/* Размытый фон: обложка текущего трека, растянутая за панелью */
 .player__bg {
   position: absolute;
-  inset: -40px;
+  inset: -80px;
   background-size: cover;
   background-position: center;
-  filter: blur(60px) brightness(0.6) saturate(150%);
-  transform: scale(1.2);
+  filter: blur(80px) brightness(0.35) saturate(130%);
+  transform: scale(1.3);
   z-index: -1;
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 .player__top {
@@ -75,7 +49,6 @@
   object-fit: cover;
   border-radius: 12px;
   flex-shrink: 0;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .player__title {
@@ -85,7 +58,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .player__controls {
@@ -100,7 +72,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  color: #e6e6e6;
+  color: #cccccc;
 }
 
 .player__volume input[type='range'],
@@ -113,12 +85,11 @@
 }
 
 .player__icon {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: none;
+  border: none;
   color: #ffffff;
   cursor: pointer;
   padding: 6px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,17 +104,14 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.08));
+  border: none;
+  background: transparent;
   color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.5),
-    0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 .player__progress {
@@ -151,7 +119,7 @@
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: #e6e6e6;
+  color: #cccccc;
   font-variant-numeric: tabular-nums;
 }
 
@@ -159,59 +127,55 @@
   flex: 1;
 }
 
-/* Телефон: компактная прямоугольная карточка со скруглёнными краями */
+/* Телефон: компактная аккуратная карточка */
 @media (max-width: 640px) {
   .player {
     bottom: 10px;
-    width: min(340px, calc(100% - 32px));
-    padding: 10px 12px 10px;
-    border-radius: 18px;
-  }
-
-  .player::before {
-    border-radius: 18px 18px 50% 50% / 18px 18px 14% 14%;
+    width: min(300px, calc(100% - 32px));
+    padding: 8px 10px 8px;
+    border-radius: 16px;
   }
 
   .player__bg {
-    filter: blur(50px) brightness(0.6) saturate(150%);
+    filter: blur(60px) brightness(0.35) saturate(130%);
   }
 
   .player__top {
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 6px;
-    margin-bottom: 6px;
+    gap: 4px;
+    margin-bottom: 4px;
   }
 
   .player__track {
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: 2px;
     width: 100%;
   }
 
   .player__cover {
-    width: 56px;
-    height: 42px;
-    border-radius: 8px;
+    width: 44px;
+    height: 33px;
+    border-radius: 6px;
   }
 
   .player__title {
-    font-size: 13px;
+    font-size: 12px;
     text-align: center;
   }
 
   .player__controls {
-    gap: 10px;
+    gap: 8px;
   }
 
   .player__icon {
-    padding: 3px;
+    padding: 2px;
   }
 
   .player__play {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
   }
 
   .player__volume {
@@ -219,7 +183,7 @@
   }
 
   .player__progress {
-    font-size: 11px;
+    font-size: 10px;
     gap: 6px;
   }
 }
